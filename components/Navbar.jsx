@@ -1,41 +1,59 @@
 
-import Link from "next/link"
-import Image from "next/image"
+import Image from "next/image";
+import Link from "next/link";
+import Logout from "./auth/Logout";
+import { auth } from "@/auth";
 
-const Navbar = () => {
-  return (
-    <nav>
-    <Link href="/">
-      <Image 
-        src="/stayswift.svg" 
-        alt="Stay Swift Logo" 
-        width={200}
-        height={200} />
-    </Link>
+const Navbar = async ({ sideMenu }) => {
+    const session = await auth();
+    return (
+        <nav>
+            <Link href="/">
+                <Image
+                    src="/stayswift.svg"
+                    alt="Stay Swift Logo"
+                    width={200}
+                    height={200}
+                />
+            </Link>
 
-    <ul>
-      <li>
-        <Link href="#">Recommended Places</Link>
-      </li>
+            {sideMenu && (
+                <ul>
+                    <li>
+                        <Link href="#">Recommended Places</Link>
+                    </li>
 
-      <li>
-        <Link href="#">About Us</Link>
-      </li>
+                    <li>
+                        <Link href="#">About Us</Link>
+                    </li>
 
-      <li>
-        <Link href="#">Contact us</Link>
-      </li>
+                    <li>
+                        <Link href="#">Contact us</Link>
+                    </li>
 
-      <li>
-        <Link href="/bookings">Bookings</Link>
-      </li>
+                    <li>
+                        <Link href="/bookings">Bookings</Link>
+                    </li>
 
-      <li>
-        <Link href="/login" className="login">Login</Link>
-      </li>
-    </ul>
-  </nav>
-  )
-}
+                    <li>
+                        {session?.user ? (
+                            <div>
+                                <span className="mx-1 text-green-600">
+                                    {session?.user?.name}
+                                </span>
+                                <span>|| </span>
+                                <Logout />
+                            </div>
+                        ) : (
+                            <Link href="/login" className="login">
+                                Login
+                            </Link>
+                        )}
+                    </li>
+                </ul>
+            )}
+        </nav>
+    );
+};
 
-export default Navbar
+export default Navbar;
